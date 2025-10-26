@@ -1,0 +1,32 @@
+name: Python Workflow
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  run-python:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
+    
+    - name: Install dependencies
+      run: |
+        if [ -f requirements.txt ]; then
+          pip install -r requirements.txt
+        else
+          echo "No requirements.txt found, skipping dependencies installation"
+        fi
+    
+    - name: Run Python script
+      run: |
+        echo "Running src/main.py..."
+        python src/main.py
+        echo "Script completed successfully!"
