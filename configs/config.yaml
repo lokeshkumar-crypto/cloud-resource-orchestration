@@ -1,0 +1,227 @@
+# Cloud Resource Orchestration Configuration
+# Configuration file for the Cloud-Based Resource Orchestration System
+
+# Orchestration Settings
+orchestration:
+  # Minimum number of instances to maintain
+  min_instances: 2
+  
+  # Maximum number of instances allowed
+  max_instances: 8
+  
+  # CPU threshold to trigger scale-up (percentage)
+  cpu_threshold_high: 70
+  
+  # CPU threshold to trigger scale-down (percentage)
+  cpu_threshold_low: 35
+  
+  # Cooldown period between scaling actions (seconds)
+  cooldown_period: 300
+  
+  # Number of consecutive checks before scaling
+  consecutive_checks: 2
+
+# Monitoring Settings
+monitoring:
+  # How often to check metrics (seconds)
+  check_interval: 60
+  
+  # Time window for metric aggregation (seconds)
+  metric_window: 300
+  
+  # Metrics to monitor
+  metrics:
+    - cpu_usage
+    # - memory_usage  # Future enhancement
+    # - network_io     # Future enhancement
+    # - disk_io        # Future enhancement
+  
+  # Metric aggregation method
+  aggregation_method: "average"  # Options: average, max, min, percentile_95
+
+# Cloud Provider Settings
+cloud_provider:
+  # Provider name
+  provider: "simulated"  # Options: simulated, aws, azure, gcp
+  
+  # Region configuration
+  region: "us-east-1"
+  
+  # Instance type to use for scaling
+  instance_type: "t3.micro"
+  
+  # AWS specific settings (when provider: aws)
+  aws:
+    # Auto Scaling Group name
+    asg_name: "cloud-orchestration-asg"
+    
+    # Launch template
+    launch_template:
+      name: "orchestration-template"
+      version: "$Latest"
+  
+  # Azure specific settings (when provider: azure)
+  azure:
+    # Resource group
+    resource_group: "cloud-orchestration-rg"
+    
+    # Virtual Machine Scale Set name
+    vmss_name: "orchestration-vmss"
+  
+  # GCP specific settings (when provider: gcp)
+  gcp:
+    # Project ID
+    project_id: "cloud-orchestration-project"
+    
+    # Instance Group name
+    instance_group: "orchestration-ig"
+
+# Logging Settings
+logging:
+  # Log level
+  level: "INFO"  # Options: DEBUG, INFO, WARNING, ERROR, CRITICAL
+  
+  # Log format
+  format: "[%(asctime)s] %(levelname)s: %(message)s"
+  
+  # Date format
+  date_format: "%Y-%m-%d %H:%M:%S"
+  
+  # Log file configuration
+  file:
+    enabled: true
+    path: "/var/log/orchestrator.log"
+    max_size: 10485760  # 10 MB
+    backup_count: 5
+  
+  # Console logging
+  console:
+    enabled: true
+    colored: true
+
+# Notification Settings
+notifications:
+  # Enable notifications
+  enabled: false
+  
+  # Notification channels
+  channels:
+    # Email notifications
+    email:
+      enabled: false
+      smtp_server: "smtp.gmail.com"
+      smtp_port: 587
+      sender: "orchestrator@example.com"
+      recipients:
+        - "admin@example.com"
+    
+    # Slack notifications
+    slack:
+      enabled: false
+      webhook_url: "https://hooks.slack.com/services/YOUR/WEBHOOK/URL"
+      channel: "#cloud-alerts"
+    
+    # SNS notifications (AWS)
+    sns:
+      enabled: false
+      topic_arn: "arn:aws:sns:us-east-1:123456789012:orchestration-alerts"
+
+# Health Check Settings
+health_check:
+  # Enable health checks before scaling
+  enabled: true
+  
+  # Health check endpoint
+  endpoint: "/health"
+  
+  # Timeout for health checks (seconds)
+  timeout: 30
+  
+  # Retry attempts
+  retry_attempts: 3
+  
+  # Interval between retries (seconds)
+  retry_interval: 10
+
+# Advanced Scaling Policies
+scaling_policies:
+  # Scaling policy type
+  type: "threshold"  # Options: threshold, predictive, scheduled
+  
+  # Threshold-based policy
+  threshold:
+    # Step scaling configuration
+    steps:
+      - metric_value: 90
+        scaling_adjustment: 2
+      - metric_value: 75
+        scaling_adjustment: 1
+      - metric_value: 50
+        scaling_adjustment: 0
+      - metric_value: 30
+        scaling_adjustment: -1
+      - metric_value: 15
+        scaling_adjustment: -2
+  
+  # Predictive scaling (future enhancement)
+  predictive:
+    enabled: false
+    model_type: "ml"  # Options: ml, statistical
+    prediction_window: 3600  # 1 hour
+  
+  # Scheduled scaling
+  scheduled:
+    enabled: false
+    schedules:
+      - name: "business_hours"
+        cron: "0 8 * * 1-5"
+        min_instances: 4
+        max_instances: 10
+      - name: "off_hours"
+        cron: "0 18 * * 1-5"
+        min_instances: 2
+        max_instances: 5
+
+# Cost Optimization Settings
+cost_optimization:
+  # Enable cost optimization
+  enabled: false
+  
+  # Maximum hourly cost (USD)
+  max_hourly_cost: 10.0
+  
+  # Use spot instances when available
+  use_spot_instances: false
+  
+  # Spot instance max price (USD)
+  spot_max_price: 0.05
+
+# Performance Metrics
+performance:
+  # Target metrics
+  targets:
+    average_response_time: 200  # milliseconds
+    error_rate: 0.01  # 1%
+    throughput: 1000  # requests per second
+  
+  # SLA requirements
+  sla:
+    availability: 99.9  # percentage
+    uptime_seconds: 86400  # 24 hours
+
+# Maintenance Settings
+maintenance:
+  # Maintenance window
+  window:
+    enabled: false
+    # Days of week (0 = Sunday, 6 = Saturday)
+    days: [0, 6]
+    # Start time (24-hour format)
+    start_time: "02:00"
+    # Duration (hours)
+    duration: 4
+  
+  # Auto-update settings
+  auto_update:
+    enabled: false
+    channel: "stable"  # Options: stable, beta, latest
